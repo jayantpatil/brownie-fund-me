@@ -10,8 +10,10 @@ contract FundMe {
     mapping(address => uint256) public addressToAmountFunded;
     address public owner;
     address[] public funders;
+    AggregatorV3Interface public priceFeed;
 
-    constructor() public {
+    constructor(address _priceFeed) public {
+        priceFeed = AggregatorV3Interface(_priceFeed);
         owner = msg.sender;
     }
 
@@ -30,16 +32,16 @@ contract FundMe {
     // function getVersion() public payable  returns (uint256) {
 
     function getVersion() public view returns (uint256) {
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(
-            0x9326BFA02ADD2366b30bacB125260Af641031331
-        );
+        // AggregatorV3Interface priceFeed = AggregatorV3Interface(
+        //     0x9326BFA02ADD2366b30bacB125260Af641031331
+        // );
         return priceFeed.version();
     }
 
     function getPrice() public view returns (uint256) {
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(
-            0x9326BFA02ADD2366b30bacB125260Af641031331
-        );
+        // AggregatorV3Interface priceFeed = AggregatorV3Interface(
+        //     0x9326BFA02ADD2366b30bacB125260Af641031331
+        // );
         (, int256 answer, , , ) = priceFeed.latestRoundData();
 
         return uint256(answer * 10000000000);

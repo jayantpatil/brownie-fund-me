@@ -1,10 +1,23 @@
-from brownie import FundMe
-from scripts.helpful_scripts import get_account
+from brownie import FundMe, MockV3Aggregator, network, config
+from scripts.helpful_scripts import get_account, deploy_mocks
+from web3 import Web3
 
 
 def deploy_fund_me():
     account = get_account()
-    fund_me = FundMe.deploy({"from": account}, publish_source=True)
+    active_network = network.show_active()
+    print(f"Current active network is {active_network}")
+    if active_network != "development":
+        price_feed_address = config["networks"][active_network]["eth_usd_price_feed"]
+    else:
+        deploy_mocks()
+        price_feed_address = MockV3Aggregator[-1].address
+
+    fund_me = FundMe.deploy(
+        price_feed_address,
+        {"from": account},
+        publish_source=config["networks"][active_network].get("verify"),
+    )
     print(f"Contract deployed at {fund_me.address}")
 
 
