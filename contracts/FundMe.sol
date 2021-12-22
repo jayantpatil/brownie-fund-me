@@ -29,6 +29,14 @@ contract FundMe {
         funders.push(msg.sender);
     }
 
+    function getEntranceFee() public view returns (uint256) {
+        uint256 minimumUSD = 50 * 10**18;
+        uint256 precision = 1 * 10**18;
+        uint256 price = getPrice();
+
+        return (minimumUSD * precision) / price;
+    }
+
     // function getVersion() public payable  returns (uint256) {
 
     function getVersion() public view returns (uint256) {
